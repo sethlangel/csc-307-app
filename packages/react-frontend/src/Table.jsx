@@ -13,7 +13,7 @@ function TableHeader() {
   function TableBody(props) {
     return (
       <tbody>
-        {props.characterData.map((row, index) => {
+        {props.characterData && props.characterData.map((row, index) => {
             return (
                 <tr key={index}>
                     <td>{row.name}</td>
@@ -27,10 +27,12 @@ function TableHeader() {
   }
 
   function Table(props) {
-    return (
-      <table>
-        <TableHeader />
-        <TableBody characterData={props.characterData} removeOneCharacter={props.removeOneCharacter}/>
-      </table>
-    );
+    if(props.characterData.length > 0){
+        return (
+          <table>
+            <TableHeader />
+            <TableBody characterData={props.characterData} removeOneCharacter={props.removeOneCharacter}/>
+          </table>
+        );
+    }
 } export default Table;
