@@ -4,11 +4,17 @@
   "description": "CSC-307 First App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run dev -w react-frontend & npm run dev -w express-backend",
+    "build": "npm run build -w react-frontend",
+    "lint": "nom run lint -w react-frontend",
+    "preview": "npm run preview -w react-frontend"
   },
   "author": "",
   "license": "ISC",
   "workspaces": [
     "packages/*"
-]
+  ],
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
 }
