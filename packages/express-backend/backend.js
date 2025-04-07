@@ -36,34 +36,25 @@ const users = {
 app.use(express.json());
 
 //Helper Functions
-const findUserByName = (name) => {
-    return users["users_list"].filter(
-      (user) => user["name"] === name
-    );
-  };
+const findUserByName = (name) => 
+  users["users_list"].filter((user) => user["name"] === name);
 
-  const findUserByNameAndJob = (name, job) => {
-    return users["users_list"].filter(
-      (user) => user["name"] === name && user["job"] === job
-    );
-  };
+const findUserByNameAndJob = (name, job) => 
+  users["users_list"].filter((user) => user["name"] === name && user["job"] === job)
 
 const findUserById = (id) =>
-    users["users_list"].find((user) => user["id"] === id);
-
+  users["users_list"].find((user) => user["id"] === id);
 
 const addUser = (user) => {
     users["users_list"].push(user)
     return user
 }
 
-const deleteUserByName = (name) => {
-    users["users_list"] = users["users_list"].filter((user) => user["name"] !== name)
-}
+const deleteUserByName = (name) => 
+  users["users_list"] = users["users_list"].filter((user) => user["name"] !== name)
 
-const deleteUserById = (id) => {
-    users["users_list"] = users["users_list"].filter((user) => user["id"] !== id)
-}
+const deleteUserById = (id) => 
+  users["users_list"] = users["users_list"].filter((user) => user["id"] !== id)
 
 //REST API ROUTES
 //GET
@@ -89,14 +80,14 @@ if (name != undefined && job != undefined) {
 });  
 
 app.get("/users/:id", (req,res) => {
-    const id = req.params["id"]
-    let result = findUserById(id)
+  const id = req.params["id"]
+  let result = findUserById(id)
 
-    if(result){
-        res.send(result)
-    } else {
-        res.status(404).send("Resource not found.")
-    }
+  if(result){
+      res.send(result)
+  } else {
+      res.status(404).send("Resource not found.")
+  }
 })
 
 //POST
@@ -108,18 +99,31 @@ app.post("/users", (req,res) => {
 
 //DELETE
 app.delete("/users", (req,res) => {
-    const user = req.body.name
-    deleteUserByName(user)
+  const name = req.query["name"]
+  let result = findUserByName(name)
+
+  if(result.length > 0){
+    deleteUserByName(name)
     res.send()
+  } else {
+    res.status(404).send("Resource not found.")
+  }
 })
 
 app.delete("/users/:id", (req,res) => {
-    const id = req.params["id"]
-    deleteUserById(id)
-    res.send()
+  const id = req.params["id"]  
+  let result = findUserById(id)
+
+  if(result){
+      deleteUserById(id)
+      res.send()
+  } else {
+      res.status(404).send("Resource not found.")
+  }
 })
 
 
+//LISTEN
 app.listen(port, () => {
   console.log(
     `Example app listening at http://localhost:${port}`
