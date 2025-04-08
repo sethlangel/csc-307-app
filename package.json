@@ -4,7 +4,10 @@
   "description": "CSC-307 First App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run dev -w react-frontend",
+    "build": "npm run build -w react-frontend",
+    "lint": "nom run lint -w react-frontend",
+    "preview": "npm run preview -w react-frontend"
   },
   "author": "",
   "license": "ISC",
