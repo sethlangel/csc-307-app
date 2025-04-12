@@ -4,9 +4,10 @@
   "description": "CSC-307 First App",
   "main": "index.js",
   "scripts": {
+    "start": "npm run dev -w react-frontend",
     "dev": "npm run dev -w react-frontend",
     "build": "npm run build -w react-frontend",
-    "lint": "nom run lint -w react-frontend",
+    "lint": "npm run lint -w react-frontend",
     "preview": "npm run preview -w react-frontend"
   },
   "author": "",
