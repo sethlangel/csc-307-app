@@ -47,8 +47,12 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 const addUser = (user) => {
-    users["users_list"].push(user)
-    return user
+    users.users_list.push(user)
+    return users
+}
+
+const generateUserID = (max) => {
+  return Math.floor(Math.random() * max);
 }
 
 const deleteUserByName = (name) => 
@@ -93,9 +97,10 @@ app.get("/users/:id", (req,res) => {
 
 //POST
 app.post("/users", (req,res) => {
-    const userToAdd = req.body
-    addUser(userToAdd)
-    res.status(201).send("User added successfully.")
+    let userToAdd = req.body
+    userToAdd = {...userToAdd, id: generateUserID(1000).toString()}
+    users.users_list.push(userToAdd)
+    res.status(201).send(userToAdd)
 })
 
 //DELETE
@@ -117,7 +122,7 @@ app.delete("/users/:id", (req,res) => {
 
   if(result){
       deleteUserById(id)
-      res.send()
+      res.status(204).send()
   } else {
       res.status(404).send("Resource not found.")
   }

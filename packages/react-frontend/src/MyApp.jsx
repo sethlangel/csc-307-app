@@ -9,34 +9,44 @@ function MyApp() {
         return fetch("http://localhost:8000/users")
     }
 
-    function removeOneCharacter(index){
-        setChars(chars.filter((character, i) => {
-            return i !== index;
+    function removeOneCharacter(id){
+      fetch("http://localhost:8000/users" + `/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((r) => {
+        if(r.status === 204){
+          setChars(chars.filter((character) => {
+            return id !== character.id;
         }))
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
     }
 
     function postUser(person) {
-        const promise = fetch("Http://localhost:8000/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(person)
-        });
-      
-        return promise;
-      }
-
+      return fetch("http://localhost:8000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(person)
+      });
+    }
+    
     function updateList(person) {
-        postUser(person)
-            .then((r) => {
-                if (r.status === 201){
-                    setChars([...chars, person])
-                }
-            })
-            .catch((error) => {
-            console.log(error);
-            });
+      postUser(person)
+        .then(async (r) => {
+          if (r.status === 201) {
+            const data = await r.json();
+            setChars([...chars, data]);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     useEffect(() => {
