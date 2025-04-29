@@ -10,20 +10,31 @@ function MyApp() {
     }
 
     function removeOneCharacter(id){
-      fetch("http://localhost:8000/users" + `/${id}`, {
+      const updated = chars.filter((char) => {
+        return id !== char._id
+      })
+      setChars(updated)
+    }
+
+    function deleteCharacter(id){
+      fetch(`http://localhost:8000/users/${id}`, {
         method: "DELETE",
         headers: {
-          "Content-Type": "application/json"
-        }
-      }).then((r) => {
-        if(r.status === 204){
-          setChars(chars.filter((character) => {
-            return id !== character.id;
-        }))
-        }
-      }).catch((error) => {
-        console.log(error)
-      })
+            "Content-Type": "application/json",
+        },
+    })
+        .then((res) => {
+            if (res.status == 204) {
+                removeOneCharacter(id);
+            } else if (res.status == 404) {
+                throw new Error("Resource not found.");
+            } else {
+                throw new Error("Error.");
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     function postUser(person) {
@@ -38,11 +49,12 @@ function MyApp() {
     
     function updateList(person) {
       postUser(person)
-        .then(async (r) => {
+        .then((r) => {
           if (r.status === 201) {
-            const data = await r.json();
-            setChars([...chars, data]);
+            return r.json()
           }
+        }).then((json) => {
+          setChars([...chars, json])
         })
         .catch((error) => {
           console.error(error);
@@ -52,7 +64,7 @@ function MyApp() {
     useEffect(() => {
         fetchUsers()
           .then((res) => res.json())
-          .then((json) => setChars(json["users_list"]))
+          .then((json) => setChars(json))
           .catch((error) => {
             console.log(error);
           });
@@ -60,7 +72,7 @@ function MyApp() {
 
   return (
     <div>
-        <Table characterData={chars} removeOneCharacter={removeOneCharacter}/>
+        <Table characterData={chars} deleteCharacter={deleteCharacter}/>
         <Form handleSubmit={updateList}/>
     </div>
   );
